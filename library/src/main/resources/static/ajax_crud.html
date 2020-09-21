@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+<head>
+	<title>Spring Boot AJAX jQuery CRUD</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<!-- jQuery Modal -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$.getJSON('http://localhost:8080/bookList', function(json) {
+				var tr=[];
+				for (var i = 0; i < json.length; i++) {
+					tr.push('<tr>');
+					tr.push('<td>' + json[i].id + '</td>');
+					tr.push('<td>' + json[i].author_name + '</td>');
+					tr.push('<td>' + json[i].book_name + '</td>');
+					tr.push('<td>' + json[i].date_create + '</td>');
+					tr.push('<td><button class=\'changeType\'>🔒</button>' + json[i].access_type + '</td>');
+					tr.push('<td><button class=\'edit\'>Edit</button></td>');
+					tr.push('<td><button class=\'delete\' id=' + json[i].id + '>Delete</button></td>');
+					tr.push('</tr>');
+				}
+				$('table').append($(tr.join('')));
+			});
+			
+			jQuery(document).ready(function() {
+				jQuery('#addNew').click(function(e) {
+					e.preventDefault();
+				    var hasEmpty = false;
+				    // Перебор полей ввода
+				    $('form#add').find('input').each(function() {
+						if ($(this).prop('required')) {
+				        // hasEmpty становится true, если есть пустое обязательное поле
+							hasEmpty = hasEmpty || !$(this).val();
+						}
+				    });
+				    if (hasEmpty) { } 
+				    else {
+						var author_name = $('#author_name').val();
+						var book_name = $('#book_name').val();
+						var date_create = $('#date_create').val();
+						var access_type = $('#access_type').val();
+						$.ajax({
+							type: "POST",
+							contentType: "application/json; charset=utf-8",
+							url: "http://localhost:8080/book/save",
+							data: JSON.stringify({'author_name': author_name, 'book_name': book_name, 'date_create': date_create, 'access_type': access_type}),
+							cache: false,
+							success: function(result) {
+								location.reload(true)
+							},
+						});
+				    }
+				});
+			});
+			
+			$(document).delegate('.delete', 'click', function() { 
+				var id = $(this).attr('id');
+				var parent = $(this).closest('tr');
+				$.ajax({
+					type: "DELETE",
+					url: "http://localhost:8080/book/delete/" + id,
+					cache: false,
+					success: function() {
+						location.reload(true)
+					}
+				});
+			});
+			
+			$(document).delegate('.edit', 'click', function() {
+				var parent = $(this).closest('tr');
+				var author_name = parent.children("td:nth-child(2)");
+				var book_name = parent.children("td:nth-child(3)");
+				var date_create = parent.children("td:nth-child(4)");
+				var buttons = parent.children("td:nth-child(6)");
+				author_name.html("<input type='text' value='" + author_name.html() + "'/>");
+				book_name.html("<input type='text' value='" + book_name.html() + "'/>");
+				date_create.html("<input type='date' value='" + date_create.html() + "'/>");
+				buttons.html("<button id='save'>Save</button>");
+			});
+			
+			$(document).delegate('#save', 'click', function() {
+				var parent = $(this).closest('tr');
+				var id = parent.children("td:nth-child(1)");
+				var author_name = parent.children("td:nth-child(2)");
+				var book_name = parent.children("td:nth-child(3)");
+				var date_create = parent.children("td:nth-child(4)");
+				var access_type = parent.children("td:nth-child(5)");
+				var buttons = parent.children("td:nth-child(6)");
+				var type1 = access_type.html().replace(/^.{38}/, '');
+
+				/* console.log(type1); */
+				
+				$.ajax({
+					type: "POST",
+					contentType: "application/json",
+					url: "http://localhost:8080/book/save",
+					data: JSON.stringify({'id' : id.html(), 'author_name' : author_name.children().val(), 
+						'book_name' : book_name.children().val(), 'date_create' : date_create.children().val(),
+						'access_type' : access_type.html().replace(/^.{38}/, '')}),
+					cache: false,
+					success: function() {
+						author_name.html(author_name.children().val());
+						book_name.html(book_name.children().val());
+						date_create.html(date_create.children().val());
+						buttons.html("<button class='edit' id='" + id.html() + "'>Edit</button>");
+					},
+				});
+			});
+			
+			$(document).delegate('.changeType', 'click', function() {
+				var parent = $(this).closest('tr');
+				var access_type = parent.children("td:nth-child(5)");
+				var buttons = parent.children("td:nth-child(6)");
+				access_type.html("<select size='2' id='access_type' name='access_type'><option value='OPEN'>OPEN</option><option value='CLOSE'>CLOSE</option></select>");
+				buttons.html("<button id='changeType'>Save</button>");
+			});
+			
+			$(document).delegate('#changeType', 'click', function() {
+				var parent = $(this).closest('tr');
+				var id = parent.children("td:nth-child(1)");
+				var author_name = parent.children("td:nth-child(2)");
+				var book_name = parent.children("td:nth-child(3)");
+				var date_create = parent.children("td:nth-child(4)");
+				var access_type = parent.children("td:nth-child(5)");
+				var buttons = parent.children("td:nth-child(6)");
+				
+				$.ajax({
+					type: "POST",
+					contentType: "application/json",
+					url: "http://localhost:8080/book/save",
+					data: JSON.stringify({'id' : id.html(), 'author_name' : author_name.html(), 
+						'book_name' : book_name.html(), 'date_create' : date_create.html(),
+						'access_type' : access_type.children().val()}),
+					cache: false,
+					success: function() {
+						access_type.html("<button class=\'changeType\'>🔒</button>" + access_type.children().val());
+						buttons.html("<button class='edit' id='" + id.html() + "'>Edit</button>");
+					},
+				});
+			});
+			
+		});
+	</script>
+</head>
+<body>
+
+	<p><a href="#add" rel="modal:open">Add New book</a></p>
+
+	<table border="1">
+		<tr>
+			<th>Id</th>
+			<th>Author</th>
+			<th>Label</th>
+			<th>Date</th>
+			<th>Type</th>
+			<th>Edit</th>
+			<th>Delete</th>
+		</tr>
+	</table>
+	
+	<form id="add" class="add_form modal">
+		<h3>Add a New book</h3>
+		<p>
+			<label>Author</label>
+			<input type="text" id="author_name" name="author_name" required>
+		</p>
+		<p>
+			<label>Label</label>
+			<input type="text" id="book_name" name="book_name" required>
+		</p>
+		<p>
+			<label>Date</label>
+			<input type="date" id="date_create" name="date_create" required> 
+		</p>
+		<p>
+			<label>Type</label>
+			<select size="2" id="access_type" name="access_type">
+			    <option selected="selected" value="OPEN">OPEN</option>
+			    <option value="CLOSE">CLOSE</option> 
+			</select>
+		</p>
+		<p>
+			<input type="submit" id="addNew" value="submit">
+		</p>
+		<p>All fields is required</p>
+	</form>
+	
+</body>
+</html>
