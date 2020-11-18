@@ -22,7 +22,7 @@ public class Meteorun {
 		double temp_max_temp; // Временное максимальное значение
 		double temp_max = -1000; // Максимальное значение
 		String url = "http://api.openweathermap.org/data/2.5/forecast?q=Perm,RU&units=metric&lang=ru"
-				+ "&appid=6b74325bbdbcb41cf459dfb8ab8c4e75";
+				+ "&appid={MyKey}";
 
 		try {
 			
