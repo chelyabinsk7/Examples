@@ -21,8 +21,9 @@ public class Meteorun {
 		int days = 5; // Количество дней
 		double temp_max_temp; // Временное максимальное значение
 		double temp_max = -1000; // Максимальное значение
-		String url = "http://api.openweathermap.org/data/2.5/forecast?q=Perm,RU&units=metric&lang=ru"
-				+ "&appid={MyKey}";
+		String myKey = "6b74325bbdbcb41cf459dfb8ab8c4e75";
+		String url0 = "http://api.openweathermap.org/data/2.5/forecast?q=Perm,RU&units=metric&lang=ru&appid=";
+		String url = url0.concat(myKey);
 
 		try {
 			
