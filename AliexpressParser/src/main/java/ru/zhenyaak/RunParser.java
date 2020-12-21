@@ -55,6 +55,7 @@ public class RunParser {
 			
 			List<Results> list1 = p.getResults();
 			for (Results x1 : list1) {
+				System.out.println(x1);
 				pw.println(x1);
 			}
 		}
