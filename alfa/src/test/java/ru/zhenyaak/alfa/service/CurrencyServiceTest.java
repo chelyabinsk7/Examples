@@ -1,27 +1,36 @@
 package ru.zhenyaak.alfa.service;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import ru.zhenyaak.alfa.entity.Currency;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 class CurrencyServiceTest {
 
 	@Autowired
 	private CurrencyService currencyService;
 	
-	List <Currency> list = new ArrayList<>();
+	@Test
+	// Доллар по отношению к самому себе не изменится
+	void currencyTest() {
+		int wait_result = 0;
+		int get_result = currencyService.currency("USD");
+		Assertions.assertEquals(wait_result, get_result);
+	}
 	
 	@Test
-	void testCurrency() {
-		Assertions.assertFalse(currencyService.currency().isEmpty());
+	 // Сравнение чисел
+	void compareTest() {
+		int wait_result = 1;
+		int get_result = currencyService.compare(10.0, 0.0);
+		Assertions.assertEquals(wait_result, get_result);
+	}
+	
+	@Test
+	// Полученный список валют не пустой
+	void allCurrencyTest() {
+		Assertions.assertFalse(currencyService.allCurrency().isEmpty());
 	}
 
 }

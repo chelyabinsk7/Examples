@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.zhenyaak.alfa.client.GiphyClient;
-import ru.zhenyaak.alfa.entity.Giphy;
 
 @Component
 public class GiphyService {
@@ -24,11 +23,21 @@ public class GiphyService {
 	@Autowired
 	private GiphyClient giphyClient;
 	
-	public Giphy rich() {
-		return giphyClient.getGiphy(api_key, tag1, rating);
+	public Object getGiphy(int compare) {
+		if (compare == 1)
+			return giphyClient.getGiphy(api_key, tag1, rating).getData().get("image_url");
+		else if (compare == -1)
+			return giphyClient.getGiphy(api_key, tag2, rating).getData().get("image_url");
+		else 
+			return null;
 	}
 	
-	public Giphy broke() {
-		return giphyClient.getGiphy(api_key, tag2, rating);
+	public String getComment(int compare, String convert_currency) {
+		if (compare == 1)
+			return "Ура! Курс USD к " + convert_currency + " за сутки вырос";
+		else if (compare == -1)
+			return "Курс USD к " + convert_currency + " за сутки снизился =(";
+		else 
+			return "Курс USD к " + convert_currency + " за сутки не изменился, гифок не будет.";
 	}
 }

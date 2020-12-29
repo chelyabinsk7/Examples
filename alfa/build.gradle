@@ -6,7 +6,7 @@ plugins {
 
 group = 'ru.zhenyaak'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '8'
+sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
@@ -18,7 +18,11 @@ ext {
 }
 
 dependencies {
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'javax.validation:validation-api'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

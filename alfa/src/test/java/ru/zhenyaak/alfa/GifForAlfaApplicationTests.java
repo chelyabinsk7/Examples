@@ -1,11 +1,7 @@
 package ru.zhenyaak.alfa;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,9 +21,13 @@ class GifForAlfaApplicationTests {
 	private MockMvc mockMvc;
 
 	@Test
-	public void shouldReturnDefaultMessage() throws Exception {
-		this.mockMvc.perform(get("/hello")).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("Hello, world")));
+	public void statusTest() throws Exception {
+		this.mockMvc.perform(get("/endpoints")).andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void statusTest2() throws Exception {
+		this.mockMvc.perform(get("/endpoint")).andExpect(status().isOk());
 	}
 
 }
