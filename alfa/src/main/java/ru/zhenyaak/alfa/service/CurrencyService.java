@@ -21,7 +21,7 @@ public class CurrencyService {
 	private String base_currency;
 	
 	private LocalDate date_today = LocalDate.now(ZoneOffset.UTC);
-	private LocalDate date_yesterday = date_today.minusDays(2);
+	private LocalDate date_yesterday = date_today.minusDays(1);
 	
 	@Autowired
 	private CurrencyClient currencyClient;
