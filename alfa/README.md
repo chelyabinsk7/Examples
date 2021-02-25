@@ -5,6 +5,15 @@
 2) Перейти по адресу http://localhost:8080/endpoint
 3) Появится страница, на которой показано, в какую сторону изменился курс рубля к доллару за сутки. Рубль - валюта по умолчанию. Можно выбрать любую другую валюту из списка.
 
+Через командную строку:
+1) gradlew bootRun
+2) Перейти по адресу http://localhost:8080/endpoint
+
+Docker:
+1) gradle clean build
+2) gradlew bootBuildImage
+3) docker run -p 8080:8080 docker.io/library/alfa:0.0.1-SNAPSHOT
+
 *****************************
 Описание задания:
 
